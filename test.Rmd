@@ -14,7 +14,7 @@ output:
 
 ```{r}
 set.seed(1000)
-DF <- data.frame(X1 = c(rnorm(50,2,1),rnorm(50,-2,2),rnorm(50,1,1)) ,X2=  c(rnorm(50,2,1),rnorm(50,0,2),rnorm(50,-1,4)) , Type = as.factor(c(rep("BLUE",50),rep("RED",50),rep("YELLOW",50) )))
+DF <- data.frame(X1 = c(rnorm(50,1.5,1),rnorm(50,-1.5,1),rnorm(50,0,1)) ,X2=  c(rnorm(50,1.5,1),rnorm(50,1.5,1),rnorm(50,-1.5,1)) , Type = (c(rep(1,50),rep(2,50),rep(3,50) )))
 
 
 
