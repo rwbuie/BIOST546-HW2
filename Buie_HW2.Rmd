@@ -12,8 +12,19 @@ output: html_notebook
 
 ##(a) Generate data such that the distribution of an observation in the kth class follows a N(µk, S) distribution, for k =1,...,K. That is, the data follow a bivariate normal distribution with a mean vector µk that is speci.c to the kth class, and a covariance matrix S that is shared across the K classes. Choose S and µ1,...,µK such that there is some overlap between the K classes, i.e. no linear decision boundary is able to perfectly separate the training data. Specify your choices for S and µ1,...,µK . 
 
+```{r}
+DF <- data.frame(X1 = c(rnorm(50,2,1),rnorm(50,-2,3),rnorm(50,1,2)) ,X2=  c(rnorm(50,2,1),rnorm(50,-2,4),rnorm(50,-1,4)) , Type = as.factor(c(rep("BLUE",50),rep("RED",50),rep("YELLOW",50) )))
+
+library(ggplot2)
+png()
+ggplot(DF, aes(x = X1,y=X2, color=Type)) +
+  geom_point()
+
+
+```
+
 (b) 
-Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes de�cision boundaries) on this plot. This plot should look something like the right-hand panel of Figure 4.6 in the textbook (although no need to worry about shading the background, and also you don’t need to display the LDA decision boundary for this sub-problem — you will do that in the next sub-problem). Be sure to label which region(s) of the plot correspond to each class. 
+Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes de�cision boundaries) on this plot. This plot should look something like the right-hand panel of Figure 4.6 in the textbook (although no need to worry about shading the background, and also you don’t need to display the LDA decision boundary for this sub-problem — you will do that in the next sub-problem). Be sure to label which region(s) of the plot correspond to each class. 
 
 (c) 
 Fit a linear discriminant analysis model to the data, and make a plot that displays the observations as well as the decision boundary (or boundaries) corresponding to this .tted model. How does the LDA decision boundary (which can be viewed as an estimate of the Bayes decision boundary) compare to the Bayes decision boundary that you computed and plotted in (b)? 
@@ -50,10 +61,10 @@ Which method had smaller 	test error in this example: LDA or QDA? Comment on you
 
 3. In this example, you will generate data in such a way that QDA will have a smaller test error than LDA. Once again, take K = 3, p = 2, and n = 50 observations per class. 
 (a) 
-Generate data such that the observations in the kth class follow a N(µk, Sk) distribution, for k =1,...,K. This is similar to the data generated in Q1, except that now each class has its own covariance matrix. Choose µ1,...,µK and S1,..., SK so that the Bayes decision boundary (or bound�aries) is highly non-linear, and also so that there is some overlap between the K classes. Specify your choices for S1,..., SK and µ1,...,µK . 
+Generate data such that the observations in the kth class follow a N(µk, Sk) distribution, for k =1,...,K. This is similar to the data generated in Q1, except that now each class has its own covariance matrix. Choose µ1,...,µK and S1,..., SK so that the Bayes decision boundary (or bound�aries) is highly non-linear, and also so that there is some overlap between the K classes. Specify your choices for S1,..., SK and µ1,...,µK . 
 
 (b) 
-Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes deci�sion boundaries) on this plot. Be sure to label which region(s) of the plot correspond to each class. 
+Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes deci�sion boundaries) on this plot. Be sure to label which region(s) of the plot correspond to each class. 
 
 (c) 
 Fit an LDA model to the data, and also .t a QDA model to the data. Make a plot that displays the observations in each class in a di.erent color, as well as the LDA decision boundary and the QDA decision boundary. Be sure to label which region(s) of the plot correspond to each class. 
@@ -62,7 +73,7 @@ Fit an LDA model to the data, and also .t a QDA model to the data. Make a plot t
 Report the confusion matrix for the training data, as well as the training error, for each of the models .t in (c). 
 
 (e) 
-Now generate n = 50 test observations per class, using the bivariate nor�mal distributions from (a). Report the K × K confusion matrices, as well as the test errors, that result from applying the models trained in (c) on the training data to your test data. 
+Now generate n = 50 test observations per class, using the bivariate nor�mal distributions from (a). Report the K × K confusion matrices, as well as the test errors, that result from applying the models trained in (c) on the training data to your test data. 
 
 (f) 
 Which method had smaller training error in this example: LDA or QDA? Comment on your .ndings. 
@@ -79,7 +90,7 @@ Describe the data. 	Where did you get it from? What is the value of p? What is t
 Make some scatterplots displaying Y on the y-axis and Xj on the x-axis, for j =1,...,p. Based on these scatterplots, do you think it will be possible to accurately predict Y using X1,...,Xp? Explain your answer. 
 
 (c) 
-Fit a logistic regression model to predict Y using X1,...,Xp, and make a table like Table 4.3 in the textbook displaying the coe.cient estimates, standard errors, and p-values. If any of your predictors are qualitative, then be sure to clearly indicate how to interpret the corresponding coe.�cients in the table. 
+Fit a logistic regression model to predict Y using X1,...,Xp, and make a table like Table 4.3 in the textbook displaying the coe.cient estimates, standard errors, and p-values. If any of your predictors are qualitative, then be sure to clearly indicate how to interpret the corresponding coe.�cients in the table. 
 
 (d) 
 For which predictors (if any) can you reject the null hypothesis H0 : ßj = 0, where ßj is the coe.cient in the logistic regression model from (c)? Comment on your results, and relate them to your answer in (b). 
@@ -93,7 +104,7 @@ Write a sentence providing an interpretation for the coe.cient associated with X
 Suppose you .t a logistic regression to some data and .nd that for a given observation x =(x1,...,xp)T , the estimated log-odds equals 0.7. What is P (Y =1 | X = x)? 
 
 (b) 
-In the same setting as (a), suppose you are now interested in the obser�vation x * =(x1 +1,x2 - 1, 2x3,x4,...,xp)T . In other words, x1 * = x1 + 1, 
+In the same setting as (a), suppose you are now interested in the obser�vation x * =(x1 +1,x2 - 1, 2x3,x4,...,xp)T . In other words, x1 * = x1 + 1, 
 
 
 ** * 
@@ -108,7 +119,7 @@ Derive an expression for the Bayes decision boundary: that is, for the set of x 
 Suppose (for this sub-problem only) that µ = 0, s = 1, p1 =0.45 (here, p1 is the prior probability that an observation belongs to Class 1). Describe the Bayes classi.er in this case: what range of x values will get assigned to Class 1, and what range of x values will get assigned to Class 2? Write out your answer as simply as you can. Draw a picture showing the set of x values assigned to Class 1 and the set of x values assigned to Class 2. 
 
 (c) 
-Now suppose we observe n training observations (x1,y1),..., (xn,yn). Ex�plain how you could use these observations to estimate µ, s, and p1 (in�stead of using the values that were given in part (b)). 
+Now suppose we observe n training observations (x1,y1),..., (xn,yn). Ex�plain how you could use these observations to estimate µ, s, and p1 (in�stead of using the values that were given in part (b)). 
 
 (d) 
 Given a test observation X = x0, provide an estimate of 
