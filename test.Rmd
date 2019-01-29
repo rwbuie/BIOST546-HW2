@@ -5,6 +5,11 @@ output:
   html_notebook: default
 ---
 
+```{r}
+knitr::opts_chunk$set(fig.show = "all", results = "hide")
+
+```
+
 # Instructions: You may discuss the homework problems in small groups, but you must write up the .nal solutions and code yourself. Please turn in your code for the problems that involve coding. However, code without written answers will receive no credit. To receive credit, you must explain your answers and show your work. All plots should be appropriately labeled and legible, with axis labels, legends, etc., as needed. 
 
 # 1. In this problem, you will generate data with p = 2 features and a qualitative response with K = 3 classes, and n = 50 observations per class. You will then apply linear discriminant analysis to the data. 
@@ -107,11 +112,22 @@ decisionplot <- function(model, data, class = NULL, predict_type = "class",
 test <- lda(Type~., data = DF)
 
 decisionplot(test, DF, class = "Type",main = "Plotting LDA")
+
 ```
 
 The LDA decision boundaries are similar, but not geometric. The boundaries on the positive Y axis are less acute reltaive to each other, and the boundary on the negative y axis is no longer perfectly vertical.
 
 ## (d) Report the K ? K confusion matrix for the LDA model on the training data. The rows of this confusion matrix represent the predicted class labels, and the columns represent the true class labels. (See Table 4.4 in the textbook for an example of a confusion matrix.) Also, report the training error (i.e. the proportion of observations that are mis-classi.ed.) 
+
+```{r}
+library(stargazer)
+DFConfusionMatrix <- table(predict(test, type="class")$class, DF$Type)
+
+DFConfusionMatrix
+stargazer(DFConfusionMatrix, no.space = TRUE, header = FALSE, float = FALSE, ci = TRUE, table.placement = "H")
+
+```
+
 
 (e) 
 Generate 	n = 50 test observations in each of the K classes, using the bivariate normal distributions from (a). Report the K ? K confusion matrix, as well as the test error, that results from applying the model .t to the training data in (c) to your test data. 
