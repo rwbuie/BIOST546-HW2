@@ -42,7 +42,7 @@ DF <- data.frame(X1 = c(rnorm(50,0,STANDARDDEV),
 
 
 ```
-1 points were created equadistant from the origin (0,0) and 
+3 sets of 50 points were created with mean locations equidistat from the origin (0,0) and at even angles (0, 120, and 240 degrees). Each set of 50 points exists `r STANDARDDEV` standard deviations from their central mean.
 
 
 ## (b) Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes de?cision boundaries) on this plot. This plot should look something like the right-hand panel of Figure 4.6 in the textbook (although no need to worry about shading the background, and also you don?t need to display the LDA decision boundary for this sub-problem ? you will do that in the next sub-problem). Be sure to label which region(s) of the plot correspond to each class. 
@@ -56,17 +56,62 @@ ggplot(DF, aes(x = X1,y=X2, color=as.factor(Type))) +
   labs(colour= "Category")+
   geom_segment(aes(x=0, y=0, xend = 0, yend = findit(linelength,180,"y")), color = "black") +
   geom_segment(aes(x=0, y=0, xend = findit(linelength,300,"x"), yend=findit(linelength,300,"y")), color = "black") +
-  geom_segment(aes(x=0, y=0, xend = findit(linelength,60,"x"), yend=findit(linelength,60,"y")), color = "black")
+  geom_segment(aes(x=0, y=0, xend = findit(linelength,60,"x"), yend=findit(linelength,60,"y")), color = "black") +
+  annotate(geom = "text", x= 0, y = DOTDISTANCE, label = "Region 1") +
+  annotate(geom = "text",x = findit(DOTDISTANCE,120,"x"), y=findit(DOTDISTANCE,120,"y"),  label= "Region 2") +
+  annotate(geom = "text",x = findit(DOTDISTANCE,240,"x"), y=findit(DOTDISTANCE,240,"y"),  label= "Region 3")
 
 
 ```
 
 
-(c) 
-Fit a linear discriminant analysis model to the data, and make a plot that displays the observations as well as the decision boundary (or boundaries) corresponding to this .tted model. How does the LDA decision boundary (which can be viewed as an estimate of the Bayes decision boundary) compare to the Bayes decision boundary that you computed and plotted in (b)? 
+## (c) Fit a linear discriminant analysis model to the data, and make a plot that displays the observations as well as the decision boundary (or boundaries) corresponding to this .tted model. How does the LDA decision boundary (which can be viewed as an estimate of the Bayes decision boundary) compare to the Bayes decision boundary that you computed and plotted in (b)? 
 
-(d) 
-Report the K ? K confusion matrix for the LDA model on the training data. The rows of this confusion matrix represent the predicted class labels, and the columns represent the true class labels. (See Table 4.4 in the textbook for an example of a confusion matrix.) Also, report the training error (i.e. the proportion of observations that are mis-classi.ed.) 
+```{r}
+library(MASS)
+
+#this function adopted from Michael Hahsler
+#http://michael.hahsler.net/SMU/EMIS7332/R/viz_classifier.html
+decisionplot <- function(model, data, class = NULL, predict_type = "class",
+  resolution = 100, showgrid = TRUE, ...) {
+
+  if(!is.null(class)) cl <- data[,class] else cl <- 1
+  data <- data[,1:2]
+  k <- length(unique(cl))
+
+  plot(data, col = as.integer(cl)+1L, pch = as.integer(cl)+1L, ...)
+
+  # make grid
+  r <- sapply(data, range, na.rm = TRUE)
+  xs <- seq(r[1,1], r[2,1], length.out = resolution)
+  ys <- seq(r[1,2], r[2,2], length.out = resolution)
+  g <- cbind(rep(xs, each=resolution), rep(ys, time = resolution))
+  colnames(g) <- colnames(r)
+  g <- as.data.frame(g)
+
+  ### guess how to get class labels from predict
+  ### (unfortunately not very consistent between models)
+  p <- predict(model, g, type = predict_type)
+  if(is.list(p)) p <- p$class
+  p <- as.factor(p)
+
+  if(showgrid) points(g, col = as.integer(p)+1L, pch = ".")
+
+  z <- matrix(as.integer(p), nrow = resolution, byrow = TRUE)
+  contour(xs, ys, z, add = TRUE, drawlabels = FALSE,
+    lwd = 2, levels = (1:(k-1))+.5)
+
+  invisible(z)
+}
+
+test <- lda(Type~., data = DF)
+
+decisionplot(test, DF, class = "Type",main = "Plotting LDA")
+```
+
+The LDA decision boundaries are similar, but not geometric. The boundaries on the positive Y axis are less acute reltaive to each other, and the boundary on the negative y axis is no longer perfectly vertical.
+
+## (d) Report the K ? K confusion matrix for the LDA model on the training data. The rows of this confusion matrix represent the predicted class labels, and the columns represent the true class labels. (See Table 4.4 in the textbook for an example of a confusion matrix.) Also, report the training error (i.e. the proportion of observations that are mis-classi.ed.) 
 
 (e) 
 Generate 	n = 50 test observations in each of the K classes, using the bivariate normal distributions from (a). Report the K ? K confusion matrix, as well as the test error, that results from applying the model .t to the training data in (c) to your test data. 
