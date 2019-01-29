@@ -13,8 +13,30 @@ output:
 
 
 ```{r}
-set.seed(1000)
-DF <- data.frame(X1 = c(rnorm(50,1.5,1),rnorm(50,-1.5,1),rnorm(50,0,1)) ,X2=  c(rnorm(50,1.5,1),rnorm(50,1.5,1),rnorm(50,-1.5,1)) , Type = (c(rep(1,50),rep(2,50),rep(3,50) )))
+set.seed(990)
+DOTDISTANCE <- 4
+STANDARDDEV <- 4
+findit <- function(length,angle,coord) {
+  #not sure what I'm doing wrong, but x and y work when reverse, so here goes
+  #Error, at 180 degrees, a very small number is reported, instead of 0
+  if(coord == "x") {
+    toReturn <- length*sin(angle*(pi/180))
+  }
+  if(coord == "y") {
+    toReturn <- length*cos(angle*(pi/180))
+  }
+  return(toReturn)
+}
+findit(5,45,"x")
+
+
+DF <- data.frame(X1 = c(rnorm(50,0,STANDARDDEV),
+                        rnorm(50,findit(DOTDISTANCE,315,"x"),STANDARDDEV),
+                        rnorm(50,findit(DOTDISTANCE,45,"x"),STANDARDDEV)) ,
+                 X2=  c(rnorm(50,-DOTDISTANCE,STANDARDDEV),
+                        rnorm(50,findit(DOTDISTANCE,315,"y"),STANDARDDEV),
+                        rnorm(50,findit(DOTDISTANCE,45,"y"),STANDARDDEV)) , 
+                 Type = (c(rep(1,50),rep(2,50),rep(3,50) )))
 
 
 
@@ -22,13 +44,22 @@ DF <- data.frame(X1 = c(rnorm(50,1.5,1),rnorm(50,-1.5,1),rnorm(50,0,1)) ,X2=  c(
 ```
 
 ## (b) Plot the data, with the observations in each class displayed in a di.erent color. Compute and display the Bayes decision boundary (or Bayes de?cision boundaries) on this plot. This plot should look something like the right-hand panel of Figure 4.6 in the textbook (although no need to worry about shading the background, and also you don?t need to display the LDA decision boundary for this sub-problem ? you will do that in the next sub-problem). Be sure to label which region(s) of the plot correspond to each class. 
+
 ```{r}
 library(ggplot2)
+linelength <- 10
+ggplot(DF, aes(x = X1,y=X2, color=as.factor(Type))) +
+  geom_point() +
+  ggtitle("Question 1 Data with Bayes Decision Boundary") +
+  labs(colour= "Category")+
+  geom_segment(aes(x=0, y=0, xend = 0, yend=linelength), color = "black") +
+  geom_segment(aes(x=0, y=0, xend = findit(linelength,135,"x"), yend=findit(linelength,135,"y")), color = "black") +
+  geom_segment(aes(x=0, y=0, xend = findit(linelength,225,"x"), yend=findit(linelength,225,"y")), color = "black")
 
-ggplot(DF, aes(x = X1,y=X2, color=Type)) +
-  geom_point()
 
 ```
+
+
 (c) 
 Fit a linear discriminant analysis model to the data, and make a plot that displays the observations as well as the decision boundary (or boundaries) corresponding to this .tted model. How does the LDA decision boundary (which can be viewed as an estimate of the Bayes decision boundary) compare to the Bayes decision boundary that you computed and plotted in (b)? 
 
